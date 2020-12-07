@@ -1,0 +1,285 @@
+<!-- Copyright (c) 2020, Cloudflare. All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+3. Neither the name of the copyright holder nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="opaque">
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png">
+    <link rel="stylesheet" href="https://assets.www.cloudflare.com/css/cloudflare-12937521f4.min.css">
+    <link rel="stylesheet" href="https://assets.www.cloudflare.com/css/application-8cbf4e1b66.min.css">
+    <link rel='stylesheet' media='screen and (min-width: 701px) and (max-width: 900px)' href='css/medium.css' />
+
+    <script src="script.js"></script>
+    <script src="wasm_exec.js"></script>
+    <script>
+
+        if (WebAssembly) {
+            // WebAssembly.instantiateStreaming is not currently available in Safari
+						// Several browsers are rejecting this: https://github.com/golang/go/wiki/WebAssembly
+            //if (WebAssembly && !WebAssembly.instantiateStreaming) { // polyfill
+            WebAssembly.instantiateStreaming = async (resp, importObject) => {
+                const source = await (await resp).arrayBuffer();
+                return await WebAssembly.instantiate(source, importObject);
+            };
+						//}
+
+            const go = new Go();
+            WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+                go.run(result.instance);
+            });
+        } else {
+            console.log("WebAssembly is not supported in your browser")
+        }
+
+    </script>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    body {
+      background-color: #F48120;
+      text-align:center;
+    }
+
+    @media (min-width: 800px) {
+      .headline1 {
+        font-family: 'Bebas Neue';
+        font-size: 100px;
+        color: #000000;
+        margin: 0px;
+      }
+		}
+
+    @media (max-width: 800px) {
+      .headline1 {
+        font-family: 'Bebas Neue';
+        font-size: 60px;
+        color: #000000;
+        margin: 0px;
+      }
+		}
+
+    .warning {
+      border: 2px solid #F48120;
+    }
+
+    @media (min-width: 800px) {
+      .container {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .container {
+      }
+		}
+
+    @media (min-width: 992px) {
+      .box {
+        width: 100%;
+        text-align: left;
+        margin-left: 50px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .box {
+        width: 90%;
+        text-align: left;
+        margin-left: 20px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .vl {
+        border-left: 6px solid #000000;
+        height: 300px;
+      }
+		}
+
+    .title {
+      font-weight: bolder;
+    }
+
+		.form {
+		  width: 70%;
+		}
+
+    .submit {
+      background-color: #FBCC8A;
+      cursor: pointer;
+      padding: 5px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 80%;
+
+      border: none;
+      text-align:center;
+      outline: none;
+      font-size: 18px;
+    }
+
+    .about {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    /* Style the button that is used to open and close the collapsible content */
+    .collapsible {
+      background-color: #FBEBD5;
+      cursor: pointer;
+      padding: 5px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      margin-top: 10px
+    }
+
+    .title2 {
+      padding-left: 15px;
+    }
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS),
+     and when you move the mouse over it (hover) */
+    .active, .collapsible:hover {
+      background-color: #FBCC8A;
+    }
+
+    /* Style the collapsible content. Note: hidden by default */
+    .detail {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      background-color: #FBEBD5;
+      text-align: left;
+    }
+
+    .content {
+        background-color: #FFFFFF;
+        max-width: 700px;
+        margin: auto;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border: 20px solid #000000;
+        padding: 2%;
+    }
+
+    .protocol {
+        /* border-style: solid;
+        border-width: thin; */
+        padding: 10px;
+        margin-top: 100px;
+        margin: 10px;
+    }
+
+    label {
+        width: 30%;
+        padding-bottom:none;
+        margin-bottom:none;
+    }
+
+    input {
+        width: 30%;
+        padding-top: none;
+        margin-bottom: 5px;
+    }
+</style>
+
+<body>
+    <div class="content" onload="collapse();">
+        <h2 class="headline1 ">OPAQUE DEMO</h2>
+				<p class="warning">Do not input sensitive data.</p>
+
+        <div class="container">
+				  <div class="box">
+            <h3 class="title">Register</h3>
+						<p>New user? Register here!</p>
+            <form method="post" id="register" onsubmit="return register(event)">
+                <label for="username">Username</label><br>
+                <input type="text" id="reg-username" name="username" placeholder=" Your username" class="form" required="required"><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="reg-password" name="password" placeholder=" Your password" class="form" required="required"><br>
+                <input type="submit" class="submit" value="Register">
+            </form>
+					</div>
+
+          <div class="vl"></div>
+
+				  <div class="box" id="titleborder">
+            <h3 class="title">Login</h3>
+						<p>Already an user? Login here!</p>
+            <form method="post" id="login" onsubmit="return login(event)">
+                <label for="username">Username</label><br>
+                <input type="text" id="login-username" name="username" placeholder=" Your username" class="form" required="required"><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="login-password" name="password" placeholder=" Your password" class="form" required="required"><br>
+                <input type="submit" class="submit" value="Login">
+            </form>
+					</div>
+				</div>
+
+        <div>
+          <div id="result"></div>
+        </div>
+
+        <div class="about">
+				  <button type="button" class="collapsible"><span class="title2">About OPAQUE</span></button>
+          <div class="detail">
+          <p>
+              OPAQUE is a new cryptographic protocol that keeps you in control of your password.
+              Your password stays on your device and is never sent (even encrypted) over the Internet.
+          </p>
+          <p>
+              This demo lets you explore how OPAQUE works, but please <b>do not input any sensitive data</b>,
+              including your name, existing usernames or passwords, into the forms.
+          </p>
+          <p>
+              The demo is a proof-of-concept and therefore should not be used to secure any real systems. In particular,
+              because a mechanism needed to extract keys from TLS does not yet exist in the browser, keys are sent over HTTPS.
+              This means that this version of OPAQUE <b>does not</b> have all the security properties it will when implemented without this
+              workaround.
+          </p>
+          <p>
+              You can read more about OPAQUE in this <a href="https://blog.cloudflare.com/opaque-oblivious-passwords/" title="OPAQUE Oblivious Passwords Blogpost" target="_blank">blog post</a>, and check the code used to build it <a href="https://github.com/cloudflare/opaque-ea" title="OPAQUE demo code" target="_blank">here</a>. You can also check the core OPAQUE code <a href="https://github.com/cloudflare/opaque-core" title="OPAQUE core code" target="_blank">here</a>.
+          </p>
+          </div>
+				</div>
+
+				<div>
+				  <p>Created by the <a href="https://research.cloudflare.com/" title="Cloudflare Research Website" target="_blank">Cloudflare Research team.</a></p>
+				</div>
+
+    </div>
+</body>
+
+</html>
