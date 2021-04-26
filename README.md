@@ -72,6 +72,32 @@ cd public/go && GOOS=js GOARCH=wasm go build -o ../main.wasm && cd ../..
 |  public/go    |  Wrapper for HTTPS client, compiles to Wasm  |
 |  https-server |  Wrapper for HTTPS server, compiles to Go executable    |
 
+## How to Cite
+
+To cite OPAQUE-EA, use one of the following formats and update with the date
+you accessed this project.
+
+APA Style
+
+```
+Bradley, T. and Celi, S. (2020). Introducing OPAQUE-EA:
+A Proof of Concept implementation of OPAQUE with Exported Authenticators. Cloudflare.
+Available at https://github.com/cloudflare/opaque-ea. Accessed Feb 2021.
+```
+
+Bibtex Source
+
+```bibtex
+@manual{circl,
+  title        = {Introducing OPAQUE-EA: A Proof of Concept implementation of OPAQUE with Exported Authenticators},
+  author       = {Tatiana Bradley and Sof\'{i}a Celi},
+  organization = {Cloudflare},
+  note         = {Available at \url{https://github.com/cloudflare/opaque-ea}. Accessed Feb 2021},
+  month        = dec,
+  year         = {2020}
+}
+```
+
 ## License
 
 The project is licensed under the [BSD-3-Clause License](LICENSE).
